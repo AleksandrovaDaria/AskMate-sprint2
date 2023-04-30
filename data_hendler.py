@@ -150,6 +150,14 @@ def read_question(cursor, id):
     cursor.execute(query)
     return cursor.fetchone()
 
+@database_common.connection_handler
+def read_comments(cursor):
+    query = f"""
+        SELECT id,  message, submission_time
+        FROM comment """
+    cursor.execute(query)
+    return cursor.fetchall()
+
 
 @database_common.connection_handler
 def read_answers(cursor, question_id, order_by=None, order_direction=None):
