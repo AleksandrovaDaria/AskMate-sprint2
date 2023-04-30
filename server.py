@@ -46,15 +46,15 @@ def question_detail(question_id, messages_msg=None):
     user_id = util.get_user_id(request)
     question = data_hendler.read_question(question_id)
     answers = data_hendler.read_answers(question_id)
-    tags = data_hendler.get_tags_for_question(question_id)
+    comments = data_hendler.read_comments()
     response = make_response(
         render_template(
             "question_detail.html",
             question=question,
             answers=answers,
+            comments=comments,
             messages_msg=messages_msg,
             user_id=user_id,
-            tags=tags,
         )
     )
     if not request.cookies.get("userID"):
@@ -360,6 +360,32 @@ def delete_tag(question_id, tag_id):
     response = make_response(
         redirect(
             url_for("question_detail", question_id=question_id, errors_msg=errors_msg)
+        )
+    )
+    if not request.cookies.get("userID"):
+        response.set_cookie("user_id", user_id)
+    return response
+@app.route("/question/<int:question_id>/new-comment", methods=["GET", "POST"])
+def question_comment(question_id):
+    user_id = util.get_user_id(request)
+    errors_msg = []
+    if request.method == "POST":
+        errors_msg = data_hendler.add_comment(request, user_id, question_id)
+        if len(errors_msg) == 0:
+            messages_msg = messages["added_comment"]
+            return redirect(
+                url_for(
+                    "question_detail",
+                    question_id=question_id,
+                    messages_msg=messages_msg,
+                )
+            )
+    response = make_response(
+        render_template(
+            "add_comment.html",
+            question_id=question_id,
+            form=request.form,
+            errors_msg=errors_msg,
         )
     )
     if not request.cookies.get("userID"):
