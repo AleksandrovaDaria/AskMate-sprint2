@@ -100,6 +100,21 @@
       {% endfor %} {% else %}
       <p>There are no answers yet</p>
       {% endif %}
+      
+            <h1>Comments</h1>
+      {% if comments|length > 0 %}
+        {%for comment in comments %}
+        <div>
+          <p>
+            Comment ID: {{comment['id']}} <br />
+            Date: {{comment['submission_time']}}
+          </p>
+          <p>{{comment['message']}}</p>
+        </div>
+        {% endfor %}
+      {% else %}
+      <p>There are no comment yet</p>
+      {% endif %}
     </main>
   </body>
 </html>
