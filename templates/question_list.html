@@ -61,10 +61,11 @@
         <tr>
           <th>Id</th>
           <th>Question title</th>
-          <th>submission_time</th>
-          <th>vote_number</th>
-          <th>message</th>
-          <th>imag</th>
+          <th>Submission time</th>
+          <th>Vote number</th>
+          <th>Message</th>
+          <th>Imagine</th>
+          <th>Comments</th>
         </tr>
         {%for user_question in user_questions %}
         <tr>
@@ -90,6 +91,11 @@
             {% if user_question['image'] %}
             <img src="{{user_question['image']}}" width="200" />
             {% endif %}
+          </td>
+          <td>
+            <form method="GET" action="/question/{{user_question['id']}}/new-comment">
+              <input type="submit" value="Add new comment" />
+            </form>
           </td>
         </tr>
         {%endfor%}
