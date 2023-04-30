@@ -454,3 +454,23 @@ def delete_tag(cursor, question_id, tag_id, user_id):
     else:
         errors_msg.append(errors["cant_delete"])
     return errors_msg
+
+@database_common.connection_handler
+def add_comment(cursor, request, user_id, question_id):
+    errors_msg = []
+    comment_id = generate_id('comment')
+    print(comment_id)
+    submission_time = round(datetime.datetime.now().timestamp())
+    message = request.form.get("message")
+    edited_count=0
+    if len(message) == 0:
+        errors_msg.append(errors["empty_message"])
+
+    if len(errors_msg) == 0:
+        query = f"""
+            INSERT INTO comment(id, message, submission_time, edited_count)
+            VALUES ({comment_id},'{message}', to_timestamp({submission_time}) , '{edited_count}')
+            RETURNING id"""
+        cursor.execute(query)
+
+    return errors_msg
